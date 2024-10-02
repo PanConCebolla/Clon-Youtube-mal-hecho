@@ -1,0 +1,119 @@
+<!DOCTYPE html><!--le dice al navegador que tipo de documento es-->
+<html lang="en"><!--para ejecutar la wea esta, abrir la terminal, poner (el nombre del js) "node asd.js", copiar el link que nos da y ponerlo en un navegador-->
+    <head><!--información no visible-->
+        <meta charset="UTF-8"><!--metadata-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ejemplo 1 - CHAT</title>
+        <link rel="stylesheet" href="hola.css">
+    </head>
+    <body><!--información visible-->
+
+
+<!--"Login"-->
+<div id="nameForm">
+    <label for="username">Nombre: </label>
+    <input id="username" autocomplete="off" placeholder="Su nombre"/><br>
+    <label for="avatarUrl"> Foto de Perfil </label>
+    <input id= "avatarUrl" autocomplete="off" placeholder="URL de la Foto"/><br>
+    <button id="setNameButton">Entrar</button>    
+</div>
+
+<!--Pestañas-->
+<div class="contenedor">
+    <ul class="ul">
+        <li class="li activo">Pestaña 1</li>
+        <li class="li">Pestaña 2</li>
+        <li class="li">Pestaña 3</li>
+    </ul>
+    <div class="subcontenedor">
+    <!--Primer Boton-->
+        <div class="bloque activo"><p>lkjglkgjrelkgjrklqefd</p></div>
+    <!--Segundo Boton-->
+        <!--Discord-->
+        <div class="bloque"><p>gjlkerjglrekgjrelkgjeklg</p></div>
+    <!--Tercer Boton-->
+        <!--Videos de Youtube-->
+        <div class="bloque">
+            <section class="flex">
+                <section class="video">
+                    <!--<img src="img/bebe.png" alt="nidea">-->
+                    <iframe width="960" height="564" src="https://www.youtube.com/embed/o7zqouVuFZY?si=vDLYNQ56YrzZbyMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <section class="comentario">
+                        <h2 id="sComentario">Chat en vivo</h2>
+                        <form action="" id="form">
+                            <input id="input" autocomplete="off" placeholder="Añade un comentario...">
+                            <button id="button">Enviar</button>
+                        </form>
+                        <ul id="messages"></ul><!--asd-->
+                    </section>
+                </section>
+                <aside class="masVideos">
+                    <img src="img/bebe.png" alt="">
+                    <img src="img/bebe.png" alt="">
+                    <img src="img/bebe.png" alt="">
+                    <img src="img/bebe.png" alt="">
+                    <img src="img/bebe.png" alt="">
+                    <img src="img/bebe.png" alt="">
+                </aside>
+            </section>
+        </div>
+    </div>
+</div>
+
+        <script src="/socket.io/socket.io.js"></script>
+
+        <script>
+            const socket = io();
+
+            const usernameInput = document.getElementById('username');
+            const avatarUrlInput = document.getElementById('avatarUrl');
+            const setNameButton = document.getElementById('setNameButton');
+            const nameForm = document.getElementById('nameForm');
+
+            const chatForm = document.getElementById('form');//el "document" hace referencia a todo el archivo, el "getElementbyId" lo que hace es buscar en todo el archivo el elemento por id
+            const messageInput = document.getElementById('input');
+            const messages = document.getElementById('messages');
+
+            let username = '';
+            let avatarUrl = '';
+
+
+            setNameButton.addEventListener('click', () => {//Capturar el evento del boton enviar (envia el mensaje al backend)
+                username = usernameInput.value.trim();
+                avatarUrl = avatarUrlInput.value.trim();//guardar la imagen en las variables let
+                if(username){//manda el valor del mensaje al backend
+                    nameForm.style.display = 'none';
+                    chatForm.style.display = 'flex';
+                }
+            });
+
+            chatForm.addEventListener('submit', (event) => {//Capturar el evento del boton enviar (envia el mensaje al backend)
+                event.preventDefault();
+                if(messageInput.value){//manda el valor del mensaje al backend
+                    socket.emit('chat message', { user: username, avatarUrl: avatarUrl, message: messageInput.value});
+                    messageInput.value = '';
+                }
+            });
+
+
+                socket.on('chat message', (data) => {
+                const item = document.createElement('li');
+
+                    if(data.avatarUrl){
+                        const img = document.createElement('img');
+                        img.src = data.avatarUrl;
+                        img.alt = `${data.user} avatar`;
+                        item.appendChild(img);
+                    }
+
+                const messageText = document.createElement('span');
+                messageText.textContent = `${data.time} - ${data.user}: ${data.message}`;
+                item.appendChild(messageText);
+                //item.textContent = data;
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        </script>
+        <script src="caca.js"></script>
+    </body>
+</html>

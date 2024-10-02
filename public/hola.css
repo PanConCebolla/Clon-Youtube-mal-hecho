@@ -1,0 +1,113 @@
+body{ font-family: Arial, Helvetica, sans-serif; background-color: rgb(15, 15, 15);}
+#messages{ list-style-type: none; padding: 0;}
+#messages li{ padding: 1rem; margin: 1em 0 .5em 0; color: aliceblue; border-bottom: 2px gray solid;}
+#form{ display: flex; }
+#input{flex: 1; padding: 10px; background-color: rgb(30, 30, 30); color: aliceblue; }
+#button{ padding: .75rem 1.5rem .75rem 1.5rem; border-radius: 0 .6em .6em 0;}
+#nameForm{background-color: aqua;}
+
+.contenedor{
+    width: 100%;
+    /*max-width: 100rem;*/
+    /*background-color: rgb(15, 15, 15);*/
+    padding: 2em;/*"em" medida relativa (no son fijas) y depende del font-size del html => <etiqueta>, <contenedora>, <body>, <html>*/
+}
+
+/*el "rem" se utiliza para cajas y el "em" para font-size*/
+/*lo que hace es que el "em" adapta todo el contenedor en proporción al font-size, siendo a veces necesario cambiar todas las escalas, por eso se usa "rem" en las cajas, para no modificar todo. Igual los 2 son aceptables*/
+.contenedor .ul{
+    list-style: none;
+    background-color: rgb(30, 30, 30);
+    margin: 1.5rem;
+    padding: 1em;
+    border-radius: 1em;
+
+    display: flex;
+    flex-flow: row nowrap;/*incluye las propiedades column/row y warp/nowrap respectivamente*/
+    justify-content: flex-start;/*nidea*/
+    align-items: center;
+}
+
+
+.contenedor .li{/*botones Bloque1,2,3*/
+    background-color:rgb(226, 226, 226);
+    padding: 1em;
+    margin: 0 1em 0 0;
+    border-radius: 1em;
+}
+
+span{
+margin-bottom: 1em;
+}
+
+.subcontenedor .bloque .comentario img{
+    height: 2em;
+    width: 2em;
+    border-radius: .75em;
+}
+
+.contenedor .li.activo{/*para poner doble clase, hay que escribirlos sin espacio*/
+    background-color: rgb(145, 140, 140);
+}
+
+
+.contenedor .subcontenedor{
+    /*min-height: 10vh;*/
+    /*background-color: bisque;*/
+    position: relative;
+}
+
+
+.contenedor .bloque{
+    /*background-color: brown;*/
+    margin: 1em;
+    padding: 1em;
+    position: absolute;
+    top: 2em;
+    opacity: 0;
+}
+
+
+.contenedor .bloque.activo{
+    opacity: 1;
+}
+
+/*grid*/
+    
+.video{
+    /*background-color: yellow;*/
+    padding: 1rem;
+    width: 60rem;
+    flex-direction: column;
+    border-right: 2px solid grey;
+}
+
+#sComentario{
+    color: aliceblue;
+    padding-left: 1rem;
+}
+
+.comentario{
+    background-color: rgb(30, 30, 30);
+    padding: 2rem;
+    border-radius: 0 0 1em 1em;
+}
+
+.masVideos{ 
+    background-color: rgb(30, 30, 30);
+    border-radius: 1em;
+    padding: 2rem;
+    margin-left: 1rem;
+    width: 12.5rem;
+    flex-direction: column;
+    text-align: center;
+}
+
+.masVideos img{
+    max-height: 10rem;
+    max-width: 10rem;
+}
+
+.flex{
+    display: flex;
+}
