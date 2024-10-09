@@ -8,24 +8,40 @@ const io = socketIo(server);
 
 app.use(express.static('public'));// permite trabajar con el front end
 
+const users = new Map(); // Guardar usuarios activos.... Maps = array / vector (conceptualmente)
+
 io.on('connection', (socket) => {
     console.log('Un usuario se ha conectado');
 
+    socket.on('new user', (username) =>{
+        users.set(socket.id, username);
+        socket.broadcast.emit('user connected', username);
+    });
+   
     socket.on('chat message', (data) => {//data <- msg
 
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});//los "[]" agarra la zona horaria de tu pc
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false });//los "[]" agarra la zona horaria de tu pc
         const messageData = {...data, time};
 
-        io.emit('chat message', messageData)//messageData <- msg
+        if (data.to){
+            const recipientSocketId = [...users.entries()].find(([id, name]) => name === data.to)?.[0];
+                if(recipientSocketId){
+                    socket.to(recipientSocketId).emit('chat message', messageData);
+                }
+        } else {
+            io.emit('chat message', messageData);
+        }      //io.emit('chat message', messageData)//messageData <- msg
     });//genera la conexion y desconexion, ademas de establecer el proceso de envio de mensaje
 
-    socket.on('disconnect', () =>{
-        console.log('Un usuario se ha desconectado');
+    socket.on('disconnect', () => {
+        const username = users.get(socket.id);
+        if (username){
+            io.emit('user disconnected', username);
+            users.delete(socket.id);
+        }   //console.log('Un usuario se ha desconectado');
     });
-
 });
 //Fin lógica chat
-
 
 //Inicio lógica servidor
 const PORT = process.env.PORT || 3000;

@@ -4,7 +4,7 @@
         <meta charset="UTF-8"><!--metadata-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ejemplo 1 - CHAT</title>
-        <link rel="stylesheet" href="hola.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body><!--información visible-->
 
@@ -27,10 +27,10 @@
     </ul>
     <div class="subcontenedor">
     <!--Primer Boton-->
-        <div class="bloque activo"><p>lkjglkgjrelkgjrklqefd</p></div>
+        <div class="bloque activo"><p>El TP esta en la pestaña 3</p></div>
     <!--Segundo Boton-->
         <!--Discord-->
-        <div class="bloque"><p>gjlkerjglrekgjrelkgjeklg</p></div>
+        <div class="bloque"><p>Prueba</p></div>
     <!--Tercer Boton-->
         <!--Videos de Youtube-->
         <div class="bloque">
@@ -40,11 +40,13 @@
                     <iframe width="960" height="564" src="https://www.youtube.com/embed/o7zqouVuFZY?si=vDLYNQ56YrzZbyMC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     <section class="comentario">
                         <h2 id="sComentario">Chat en vivo</h2>
+                        <ul id="messages"></ul><!--asd-->
                         <form action="" id="form">
+                            <input id="recipient" autocomplete="off" placeholder="Enviar a (nombre)"/>
                             <input id="input" autocomplete="off" placeholder="Añade un comentario...">
                             <button id="button">Enviar</button>
                         </form>
-                        <ul id="messages"></ul><!--asd-->
+
                     </section>
                 </section>
                 <aside class="masVideos">
@@ -72,16 +74,17 @@
 
             const chatForm = document.getElementById('form');//el "document" hace referencia a todo el archivo, el "getElementbyId" lo que hace es buscar en todo el archivo el elemento por id
             const messageInput = document.getElementById('input');
+            const recipientInput = document.getElementById('recipient');
             const messages = document.getElementById('messages');
 
             let username = '';
             let avatarUrl = '';
 
-
             setNameButton.addEventListener('click', () => {//Capturar el evento del boton enviar (envia el mensaje al backend)
                 username = usernameInput.value.trim();
                 avatarUrl = avatarUrlInput.value.trim();//guardar la imagen en las variables let
                 if(username){//manda el valor del mensaje al backend
+                    socket.emit('new user', username);
                     nameForm.style.display = 'none';
                     chatForm.style.display = 'flex';
                 }
@@ -90,11 +93,31 @@
             chatForm.addEventListener('submit', (event) => {//Capturar el evento del boton enviar (envia el mensaje al backend)
                 event.preventDefault();
                 if(messageInput.value){//manda el valor del mensaje al backend
-                    socket.emit('chat message', { user: username, avatarUrl: avatarUrl, message: messageInput.value});
+                    socket.emit('chat message', { 
+                        user: username, 
+                        avatarUrl: avatarUrl, 
+                        message: messageInput.value, 
+                        to: recipientInput.value.trim()
+                    });
                     messageInput.value = '';
+                    recipientInput.value = '';
                 }
             });
 
+
+                socket.on('user connected', (username) =>{
+                    const item = document.createElement('li');
+                    item.textContent = `${username} se ha conectado`;
+                    item.style.color = 'green';
+                    messages.appendChild(item);
+                });
+
+                socket.on('user disconnected', (username) =>{
+                    const item = document.createElement('li');
+                    item.textContent = `${username} se ha desconectado`;
+                    item.style.color = 'red';
+                    messages.appendChild(item);
+                });
 
                 socket.on('chat message', (data) => {
                 const item = document.createElement('li');
@@ -114,6 +137,6 @@
                 window.scrollTo(0, document.body.scrollHeight);
             });
         </script>
-        <script src="caca.js"></script>
+        <script src="pestaña.js"></script>
     </body>
 </html>
